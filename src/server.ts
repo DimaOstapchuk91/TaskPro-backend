@@ -1,15 +1,12 @@
 import express from 'express';
 import { env } from './utils/env';
 import { notFoundHandler } from './middlewares/notFoundHandler';
-import { errorHandler } from './middlewares/errorHandler.';
+import { errorHandler } from './middlewares/errorHandler';
 
-// import cors from 'cors';
-// // import pino from 'pino-http';
-// import cookieParser from 'cookie-parser';
+import cors from 'cors';
+import pino from 'pino-http';
+import cookieParser from 'cookie-parser';
 import allRouters from './routers/index';
-// import { env } from './utils/env.ts';
-// import { notFoundHandler } from './middlewares/notFoundHandler.ts';
-// import { errorHandler } from './middlewares/errorHandler.ts';
 
 const PORT = Number(env('PORT', '3000'));
 
@@ -20,14 +17,13 @@ export const setupServer = () => {
 
   app.use(cookieParser());
 
-  //   app.use(
-  //     pino({
-  //       transport: {
-  //         target: 'pino-pretty',
-  //       },
-  //     }),
-  //   );
-  // закоментовано для розробки
+  app.use(
+    pino({
+      transport: {
+        target: 'pino-pretty',
+      },
+    }),
+  );
 
   app.get('/', (req, res) => {
     res.json({
