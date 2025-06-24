@@ -1,19 +1,26 @@
 import express from 'express';
-import { env } from './utils/env';
-import { notFoundHandler } from './middlewares/notFoundHandler';
-import { errorHandler } from './middlewares/errorHandler';
+import { env } from './utils/env.js';
+import { notFoundHandler } from './middlewares/notFoundHandler.js';
+import { errorHandler } from './middlewares/errorHandler.js';
 
 import cors from 'cors';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
-import allRouters from './routers/index';
+// import allRouters from './routers/index';
 
 const PORT = Number(env('PORT', '3000'));
 
 export const setupServer = () => {
   const app = express();
 
-  app.use(cors());
+  const corsOptions = {
+    origin: ['http://localhost:5173'],
+    methods: 'GET,POST,PATCH,DELETE',
+    allowedHeaders: 'Content-Type,Authorization',
+    credentials: true,
+  };
+
+  app.use(cors(corsOptions));
 
   app.use(cookieParser());
 
@@ -26,12 +33,13 @@ export const setupServer = () => {
   );
 
   app.get('/', (req, res) => {
+    console.log('Request received at root path');
     res.json({
       message: 'Start page!',
     });
   });
 
-  app.use(allRouters);
+  // app.use(allRouters);
 
   app.use('*', notFoundHandler);
 

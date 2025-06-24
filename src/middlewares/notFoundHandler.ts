@@ -1,10 +1,6 @@
+import { RequestHandler } from 'express';
 import createHttpError from 'http-errors';
-import { Request, Response, NextFunction } from 'express';
 
-export const notFoundHandler = (
-  req: Request,
-  res: Response,
-  next: NextFunction,
-): void => {
+export const notFoundHandler: RequestHandler = (req, res, next) => {
   next(createHttpError(404, 'Route not found'));
 };

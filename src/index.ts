@@ -1,6 +1,6 @@
 import { setupServer } from './server.js';
 
-const bootServer = async () => {
+const bootServer = async (): Promise<void> => {
   setupServer();
 };
 
