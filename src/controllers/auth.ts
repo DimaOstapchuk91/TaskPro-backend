@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { loginUser, refreshUserSession, registerUser } from '../services/auth';
+import {
+  loginUser,
+  logoutUser,
+  refreshUserSession,
+  registerUser,
+} from '../services/auth';
 import { THIRTY_DAY } from '../constans/constans';
 import {
   LoginPayload,
@@ -90,3 +95,21 @@ export const refreshUserSessionController = async (
 };
 
 // ====================================================================
+export const logoutUserController = async (req: Request, res: Response) => {
+  const cookies = req.cookies as RefreshCookies;
+
+  await logoutUser(cookies.sessionId);
+
+  res.clearCookie('refreshToken', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
+  res.clearCookie('sessionId', {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+  });
+
+  res.status(200).end();
+};

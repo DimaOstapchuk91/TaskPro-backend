@@ -137,3 +137,14 @@ export const refreshUserSession = async ({
     refreshToken: updatedSession.refresh_token,
   };
 };
+
+// ==========================LogOut======================================
+
+export const logoutUser = async (sessionId: string): Promise<void> => {
+  const result = await pool.query('DELETE FROM sessions WHERE id = $1', [
+    sessionId,
+  ]);
+  if (result.rowCount === 0) {
+    throw createHttpError(401, 'Authentication failed. Session not found');
+  }
+};
