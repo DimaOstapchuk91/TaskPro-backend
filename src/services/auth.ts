@@ -5,6 +5,7 @@ import { randomBytes } from 'crypto';
 import { THIRTY_DAY, TWO_HOURS } from '../constans/constans';
 import {
   AllSessionData,
+  AllUserData,
   LoginPayload,
   RefreshCookies,
   RegisterPayload,
@@ -147,4 +148,17 @@ export const logoutUser = async (sessionId: string): Promise<void> => {
   if (result.rowCount === 0) {
     throw createHttpError(401, 'Authentication failed. Session not found');
   }
+};
+
+// ==========================Get User======================================
+
+export const getUser = async (userId: string) => {
+  const userData = await pool.query<AllUserData>(
+    'SELECT id, name, email, avatar_url, theme FROM users WHERE id= $1',
+    [userId],
+  );
+
+  if (userData.rowCount === 0) throw createHttpError(404, 'User not found');
+
+  return userData.rows[0];
 };

@@ -1,5 +1,6 @@
 import { Request, Response } from 'express';
 import {
+  getUser,
   loginUser,
   logoutUser,
   refreshUserSession,
@@ -10,6 +11,7 @@ import {
   LoginPayload,
   RefreshCookies,
   RegisterPayload,
+  ReqUser,
   ResponseLoginSession,
 } from '../types/auth.types';
 
@@ -95,7 +97,10 @@ export const refreshUserSessionController = async (
 };
 
 // ====================================================================
-export const logoutUserController = async (req: Request, res: Response) => {
+export const logoutUserController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
   const cookies = req.cookies as RefreshCookies;
 
   await logoutUser(cookies.sessionId);
@@ -112,4 +117,17 @@ export const logoutUserController = async (req: Request, res: Response) => {
   });
 
   res.status(200).end();
+};
+
+export const gerUserController = async (
+  req: ReqUser,
+  res: Response,
+): Promise<void> => {
+  const userData = await getUser(req.user.id);
+
+  res.status(200).json({
+    status: 200,
+    message: 'User found successfully!',
+    data: userData,
+  });
 };

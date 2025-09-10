@@ -33,3 +33,13 @@ export interface RefreshCookies {
   sessionId: string;
   refreshToken: string;
 }
+
+export interface AllUserData {
+  id: string;
+  name: string;
+  email: string;
+  avatar_url: string | null;
+  theme: 'light' | 'dark' | 'violet';
+}
+
+export type ReqUser = { user: { id: string } };
