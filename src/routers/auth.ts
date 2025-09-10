@@ -2,7 +2,7 @@ import { Router } from 'express';
 import express from 'express';
 import { ctrlWrapper } from '../utils/ctrlWrapper';
 import { validateBody } from '../middlewares/validateBody';
-import { authSchema } from '../validation/auth';
+import { loginSchema, registerSchema } from '../validation/auth';
 import {
   loginUserController,
   registerUserController,
@@ -15,14 +15,14 @@ const router = Router();
 router.post(
   '/register',
   jsonParser,
-  validateBody(authSchema),
+  validateBody(registerSchema),
   ctrlWrapper(registerUserController),
 );
 
 router.post(
   '/login',
   jsonParser,
-  validateBody(authSchema),
+  validateBody(loginSchema),
   ctrlWrapper(loginUserController),
 );
 
