@@ -1,7 +1,12 @@
 import { Request, Response } from 'express';
-import { loginUser, registerUser } from '../services/auth';
+import { loginUser, refreshUserSession, registerUser } from '../services/auth';
 import { THIRTY_DAY } from '../constans/constans';
-import { LoginPayload, RegisterPayload } from '../types/auth.types';
+import {
+  LoginPayload,
+  RefreshCookies,
+  RegisterPayload,
+  ResponseLoginSession,
+} from '../types/auth.types';
 
 export const registerUserController = async (
   req: Request<{}, {}, RegisterPayload>,
@@ -15,6 +20,8 @@ export const registerUserController = async (
     data: user,
   });
 };
+
+//=====================================================================
 
 export const loginUserController = async (
   req: Request<{}, {}, LoginPayload>,
@@ -42,3 +49,44 @@ export const loginUserController = async (
     data: { accessToken: session.accessToken },
   });
 };
+
+// ====================================================================
+
+export const setupSession = (res: Response, session: ResponseLoginSession) => {
+  res.cookie('refreshToken', session.refreshToken, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    expires: new Date(Date.now() + THIRTY_DAY),
+  });
+
+  res.cookie('sessionId', session.id, {
+    httpOnly: true,
+    secure: true,
+    sameSite: 'none',
+    expires: new Date(Date.now() + THIRTY_DAY),
+  });
+};
+
+export const refreshUserSessionController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const cookies = req.cookies as RefreshCookies;
+
+  const session = await refreshUserSession({
+    sessionId: cookies.sessionId,
+    refreshToken: cookies.refreshToken,
+  });
+
+  setupSession(res, session);
+
+  res.status(200).json({
+    status: 200,
+    secure: true,
+    message: 'Successfully refreshed a session',
+    data: { accessToken: session.accessToken },
+  });
+};
+
+// ====================================================================

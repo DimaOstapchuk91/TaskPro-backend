@@ -5,6 +5,7 @@ import { validateBody } from '../middlewares/validateBody';
 import { loginSchema, registerSchema } from '../validation/auth';
 import {
   loginUserController,
+  refreshUserSessionController,
   registerUserController,
 } from '../controllers/auth';
 
@@ -25,5 +26,7 @@ router.post(
   validateBody(loginSchema),
   ctrlWrapper(loginUserController),
 );
+
+router.post('/refresh', ctrlWrapper(refreshUserSessionController));
 
 export default router;
