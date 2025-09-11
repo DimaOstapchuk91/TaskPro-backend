@@ -41,5 +41,3 @@ export interface AllUserData {
   avatar_url: string | null;
   theme: 'light' | 'dark' | 'violet';
 }
-
-export type ReqUser = { user: { id: string } };

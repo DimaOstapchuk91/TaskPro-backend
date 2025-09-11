@@ -14,6 +14,7 @@ import {
   ReqUser,
   ResponseLoginSession,
 } from '../types/auth.types';
+import createHttpError from 'http-errors';
 
 export const registerUserController = async (
   req: Request<{}, {}, RegisterPayload>,
@@ -119,10 +120,14 @@ export const logoutUserController = async (
   res.status(200).end();
 };
 
-export const gerUserController = async (
-  req: ReqUser,
+export const getUserController = async (
+  req: Request,
   res: Response,
 ): Promise<void> => {
+  if (!req.user) {
+    throw createHttpError(401, 'Unauthorized');
+  }
+
   const userData = await getUser(req.user.id);
 
   res.status(200).json({
