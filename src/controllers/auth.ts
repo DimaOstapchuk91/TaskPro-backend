@@ -11,7 +11,6 @@ import {
   LoginPayload,
   RefreshCookies,
   RegisterPayload,
-  ReqUser,
   ResponseLoginSession,
 } from '../types/auth.types';
 import createHttpError from 'http-errors';
