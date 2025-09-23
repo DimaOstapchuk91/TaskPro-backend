@@ -3,11 +3,26 @@ import { env } from './env.js';
 import { CLOUDINARY } from '../constans/constans.js';
 import * as fs from 'fs/promises';
 
+interface CloudinaryData {
+  id: string;
+  filename: string;
+  url: string;
+}
+
+type CloudinaryRes = {
+  name: string;
+  desk?: CloudinaryData;
+  tab?: CloudinaryData;
+  mob?: CloudinaryData;
+  thumb?: CloudinaryData;
+};
+
 cloudinary.v2.config({
   secure: true,
   cloud_name: env(CLOUDINARY.CLOUD_NAME),
   api_key: env(CLOUDINARY.API_KEY),
   api_secret: env(CLOUDINARY.API_SECRET),
+  settings: { folder_mode: true },
 });
 
 export const uploadToCloudinary = async (filePath: string): Promise<string> => {
@@ -18,56 +33,46 @@ export const uploadToCloudinary = async (filePath: string): Promise<string> => {
   return response.secure_url;
 };
 
-export const getBackgrounds = async (): Promise<
-  Array<{
-    name: string;
-    desk?: string;
-    tab?: string;
-    mob?: string;
-    thumb?: string;
-  }>
-> => {
-  const desk = await cloudinary.v2.api.resources({
-    type: 'upload',
-    prefix: 'bg-img/desk',
-    max_results: 100,
-  });
-  const tab = await cloudinary.v2.api.resources({
-    type: 'upload',
-    prefix: 'bg-img/tab',
-    max_results: 100,
-  });
-  const mob = await cloudinary.v2.api.resources({
-    type: 'upload',
-    prefix: 'bg-img/mob',
-    max_results: 100,
-  });
-  const thumb = await cloudinary.v2.api.resources({
-    type: 'upload',
-    prefix: 'bg-img/thumb',
-    max_results: 100,
-  });
+export const getBackgrounds = async (): Promise<Array<CloudinaryRes>> => {
+  const types = ['desk', 'tab', 'mob', 'thumb'];
 
-  const allResources = [
-    ...desk.resources,
-    ...tab.resources,
-    ...mob.resources,
-    ...thumb.resources,
-  ];
+  const resourcesByType = await Promise.all(
+    types.map(async (type) => {
+      const result = await cloudinary.v2.search
+        .expression(`asset_folder=task-pro/bg-img/${type}`)
+        .max_results(100)
+        .execute();
+
+      return result.resources
+        .map((res: any) => {
+          const baseName = res.filename.replace(
+            new RegExp(`-${type}(_.*)?$`),
+            '',
+          );
+
+          if (baseName === res.filename) return null;
+
+          return {
+            baseName,
+            type,
+            data: {
+              id: res.asset_id,
+              filename: res.filename,
+              url: res.url,
+            },
+          };
+        })
+        .filter((item: any) => item !== null);
+    }),
+  );
+
+  const allResources = resourcesByType.flat();
 
   const grouped: Record<string, any> = {};
 
   allResources.forEach((res) => {
-    const fileName = res.public_id.split('/').pop();
-    const baseName = fileName?.replace(/-(desk|tab|mob|thumb)$/, '');
-    if (!baseName) return;
-
-    if (!grouped[baseName]) grouped[baseName] = {};
-
-    if (fileName.endsWith('-desk')) grouped[baseName].desk = res.secure_url;
-    if (fileName.endsWith('-tab')) grouped[baseName].tab = res.secure_url;
-    if (fileName.endsWith('-mob')) grouped[baseName].mob = res.secure_url;
-    if (fileName.endsWith('-thumb')) grouped[baseName].thumb = res.secure_url;
+    if (!grouped[res.baseName]) grouped[res.baseName] = {};
+    grouped[res.baseName][res.type] = res.data;
   });
 
   const backgroundsArray = Object.entries(grouped).map(([name, urls]) => ({

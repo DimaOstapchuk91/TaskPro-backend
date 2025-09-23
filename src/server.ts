@@ -24,13 +24,13 @@ export const setupServer = () => {
 
   app.use(cookieParser());
 
-  app.use(
-    pino({
-      transport: {
-        target: 'pino-pretty',
-      },
-    }),
-  );
+  // app.use(
+  //   pino({
+  //     transport: {
+  //       target: 'pino-pretty',
+  //     },
+  //   }),
+  // );
 
   app.get('/', (req, res) => {
     console.log('Request received at root path');
