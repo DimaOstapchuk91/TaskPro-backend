@@ -21,6 +21,8 @@ export const registerUserController = async (
 ): Promise<void> => {
   const user = await registerUser(req.body);
 
+  console.log('Registered user success:', user);
+
   res.status(201).json({
     status: 201,
     message: 'Successfully registered a user',
@@ -87,6 +89,8 @@ export const refreshUserSessionController = async (
   });
 
   setupSession(res, session);
+
+  console.log('спрацював рефреш');
 
   res.status(200).json({
     status: 200,
