@@ -152,7 +152,7 @@ export const logoutUser = async (sessionId: string): Promise<void> => {
 
 // ==========================Get User======================================
 
-export const getUser = async (userId: string) => {
+export const getUser = async (userId: number) => {
   const userData = await pool.query<AllUserData>(
     'SELECT id, name, email, avatar_url, theme FROM users WHERE id= $1',
     [userId],
