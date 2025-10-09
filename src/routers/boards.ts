@@ -16,7 +16,7 @@ import {
   getBoardsController,
   getOneBoardsController,
 } from '../controllers/boards';
-import { createBoardSchema, editBoardSchema } from '../validation/boards';
+import { boardSchema } from '../validation/boards';
 
 const jsonParser = express.json();
 
@@ -32,14 +32,15 @@ router.post(
   '/',
   authenticate,
   jsonParser,
-  validateBody(createBoardSchema),
+  validateBody(boardSchema),
   ctrlWrapper(createBoardController),
 );
+
 router.patch(
   '/:boardId',
   authenticate,
   jsonParser,
-  validateBody(editBoardSchema),
+  validateBody(boardSchema),
   ctrlWrapper(editBoardController),
 );
 

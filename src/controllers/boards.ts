@@ -1,6 +1,7 @@
 import { Request, Response } from 'express';
-import { createBoard, getUserBoards } from '../services/boards';
+import { createBoard, editBoard, getUserBoards } from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
+import createHttpError from 'http-errors';
 
 export const getBoardsController = async (
   req: Request,
@@ -46,6 +47,12 @@ export const createBoardController = async (
 };
 
 export const editBoardController = async (req: Request, res: Response) => {
+  const boardId = Number(req.params.boardId);
+
+  if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
+
+  const board = await editBoard(boardId, req.body.title, req.user.id);
+
   res.status(200).json({
     status: 200,
     message: 'Edit board successfully ',
