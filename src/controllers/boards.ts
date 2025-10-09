@@ -2,7 +2,15 @@ import { Request, Response } from 'express';
 import { createBoard } from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
 
-export const getUserBoardsController = async (req: Request, res: Response) => {
+export const getBoardsController = async (req: Request, res: Response) => {
+  res.status(200).json({
+    status: 200,
+    message: 'Successfully get user boards',
+    data: boards,
+  });
+};
+
+export const getOneBoardsController = async (req: Request, res: Response) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully get user boards',
