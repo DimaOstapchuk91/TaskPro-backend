@@ -1,8 +1,21 @@
 import { Request, Response } from 'express';
-import { createBoard } from '../services/boards';
+import { createBoard, getUserBoards } from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
 
-export const getBoardsController = async (req: Request, res: Response) => {
+export const getBoardsController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  const boards = await getUserBoards(req.user.id);
+
+  if (!boards.length) {
+    return void res.status(200).json({
+      status: 200,
+      message: "You don't have any boards yet.",
+      data: [],
+    });
+  }
+
   res.status(200).json({
     status: 200,
     message: 'Successfully get user boards',
@@ -25,8 +38,8 @@ export const createBoardController = async (
   console.log('test req', req.user);
   const board = await createBoard(req.body.title, req.user.id);
 
-  res.status(200).json({
-    status: 200,
+  res.status(201).json({
+    status: 201,
     message: 'Create board successfully ',
     data: board,
   });

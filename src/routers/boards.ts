@@ -22,7 +22,7 @@ const jsonParser = express.json();
 
 const router = Router();
 
-// Boards route
+//================================================================Boards route<<<<
 
 router.get('/', authenticate, ctrlWrapper(getBoardsController));
 
@@ -45,7 +45,7 @@ router.patch(
 
 router.delete('/:boardId', authenticate, ctrlWrapper(deletetBoardController));
 
-//Column Routes
+//================================================================Column Routes<<<<
 
 router.post(
   '/:boardId/columns/',
@@ -69,10 +69,10 @@ router.delete(
   ctrlWrapper(deleteColumnController),
 );
 
-//Task Routes
+//================================================================Task Routes<<<
 
 router.post(
-  '/:boardId/columns/:columnId/task/',
+  '/:boardId/columns/:columnId/tasks/',
   authenticate,
   jsonParser,
   // validateBody(),
