@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { createBoard, editBoard, getUserBoards } from '../services/boards';
+import {
+  createBoard,
+  deleteBoard,
+  editBoard,
+  getUserBoards,
+} from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
 import createHttpError from 'http-errors';
 
@@ -61,6 +66,12 @@ export const editBoardController = async (req: Request, res: Response) => {
 };
 
 export const deletetBoardController = async (req: Request, res: Response) => {
+  const boardId = Number(req.params.boardId);
+
+  if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
+
+  const board = await deleteBoard(boardId, req.user.id);
+
   res.status(200).json({
     status: 200,
     message: 'Edit board successfully ',

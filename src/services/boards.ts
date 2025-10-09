@@ -40,7 +40,7 @@ export const editBoard = async (
   );
 
   if (existing.rowCount && existing.rowCount > 0) {
-    throw createHttpError(409, 'A board with this name already exists.');
+    throw createHttpError(409, 'A board with this id already exists.');
   }
 
   const newBoardTitle = await pool.query(
@@ -53,4 +53,22 @@ export const editBoard = async (
   }
 
   return newBoardTitle.rows[0];
+};
+
+export const deleteBoard = async (boardId: number, userId: number) => {
+  const existing = await pool.query<Board>(
+    'SELECT * FROM boards WHERE id = $1 AND owner_id = $2',
+    [boardId, userId],
+  );
+
+  if (existing.rowCount === 0) {
+    throw createHttpError(404, 'Board not found');
+  }
+
+  const result = await pool.query(
+    'DELETE FROM boards WHERE id = $1 RETURNING *',
+    [boardId],
+  );
+
+  return result.rows[0];
 };
