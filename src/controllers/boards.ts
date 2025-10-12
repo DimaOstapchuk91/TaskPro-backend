@@ -65,7 +65,7 @@ export const editBoardController = async (req: Request, res: Response) => {
   });
 };
 
-export const deletetBoardController = async (req: Request, res: Response) => {
+export const deleteBoardController = async (req: Request, res: Response) => {
   const boardId = Number(req.params.boardId);
 
   if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
@@ -76,53 +76,5 @@ export const deletetBoardController = async (req: Request, res: Response) => {
     status: 200,
     message: 'Edit board successfully ',
     data: board,
-  });
-};
-
-export const createColumnController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Create column successfully ',
-    data: column,
-  });
-};
-
-export const editColumnController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Edit column successfully ',
-    data: column,
-  });
-};
-
-export const deleteColumnController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Delete column successfully ',
-    data: column,
-  });
-};
-
-export const createTaskController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Create task successfully ',
-    data: task,
-  });
-};
-
-export const editTaskController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Edit task successfully ',
-    data: task,
-  });
-};
-
-export const deleteTaskController = async (req: Request, res: Response) => {
-  res.status(200).json({
-    status: 200,
-    message: 'Delete task successfully ',
-    data: task,
   });
 };

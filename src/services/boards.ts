@@ -66,7 +66,7 @@ export const deleteBoard = async (boardId: number, userId: number) => {
   }
 
   const result = await pool.query(
-    'DELETE FROM boards WHERE id = $1 RETURNING *',
+    'DELETE FROM boards WHERE id = $1 RETURNING id',
     [boardId],
   );
 

@@ -5,18 +5,22 @@ import { validateBody } from '../middlewares/validateBody';
 import { ctrlWrapper } from '../utils/ctrlWrapper';
 import {
   createBoardController,
-  createColumnController,
-  createTaskController,
-  deleteColumnController,
-  deleteTaskController,
-  deletetBoardController,
+  deleteBoardController,
   editBoardController,
-  editColumnController,
-  editTaskController,
   getBoardsController,
   getOneBoardsController,
 } from '../controllers/boards';
 import { boardSchema } from '../validation/boards';
+import {
+  createColumnController,
+  deleteColumnController,
+  editColumnController,
+} from '../controllers/columns';
+import {
+  createTaskController,
+  deleteTaskController,
+  editTaskController,
+} from '../controllers/tasks';
 
 const jsonParser = express.json();
 
@@ -44,7 +48,7 @@ router.patch(
   ctrlWrapper(editBoardController),
 );
 
-router.delete('/:boardId', authenticate, ctrlWrapper(deletetBoardController));
+router.delete('/:boardId', authenticate, ctrlWrapper(deleteBoardController));
 
 //================================================================Column Routes<<<<
 
