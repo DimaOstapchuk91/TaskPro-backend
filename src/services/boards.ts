@@ -65,10 +65,10 @@ export const deleteBoard = async (boardId: number, userId: number) => {
     throw createHttpError(404, 'Board not found');
   }
 
-  const result = await pool.query(
+  const deleteBoard = await pool.query(
     'DELETE FROM boards WHERE id = $1 RETURNING id',
     [boardId],
   );
 
-  return result.rows[0];
+  return deleteBoard.rows[0];
 };
