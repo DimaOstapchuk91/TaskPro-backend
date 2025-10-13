@@ -83,7 +83,7 @@ export const editColumn = async (
   );
 
   if (!updated.rows[0]) {
-    throw createHttpError(404, 'Task not found');
+    throw createHttpError(404, 'Column not found');
   }
 
   return updated.rows[0];
@@ -125,7 +125,7 @@ export const dellColumn = async (
   );
 
   if (deleted.rowCount === 0) {
-    throw createHttpError(500, 'Failed to delete column');
+    throw createHttpError(404, 'Column not found');
   }
 
   return deleted.rows[0];

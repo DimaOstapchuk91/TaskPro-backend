@@ -84,3 +84,44 @@ export const editTask = async (
 
   return updated.rows[0];
 };
+
+export const deleteTask = async (
+  client: PoolClient,
+  columnId: number,
+  boardId: number,
+  userId: number,
+  taskId: number,
+): Promise<{ id: number }> => {
+  const boardExists = await client.query<{ exists: boolean }>(
+    `SELECT EXISTS (
+         SELECT 1 FROM boards WHERE id = $1 AND owner_id = $2
+       ) AS "exists"`,
+    [boardId, userId],
+  );
+
+  if (!boardExists.rows[0].exists) {
+    throw createHttpError(404, 'Board not found');
+  }
+
+  const columnExists = await client.query<{ exists: boolean }>(
+    `SELECT EXISTS (
+         SELECT 1 FROM columns WHERE id = $1 AND board_id = $2
+       ) AS "exists"`,
+    [columnId, boardId],
+  );
+
+  if (!columnExists.rows[0].exists) {
+    throw createHttpError(404, 'This column not found');
+  }
+
+  const deleted = await client.query<{ id: number }>(
+    'DELETE FROM tasks WHERE id = $1 RETURNING id',
+    [taskId],
+  );
+
+  if (deleted.rowCount === 0) {
+    throw createHttpError(404, 'Task not found');
+  }
+
+  return deleted.rows[0];
+};
