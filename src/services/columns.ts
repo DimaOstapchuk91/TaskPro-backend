@@ -16,10 +16,7 @@ export const createColumn = async (
   );
 
   if (!boardExists.rows[0].exists) {
-    throw createHttpError(
-      403,
-      'Access denied. This board does not belong to you.',
-    );
+    throw createHttpError(404, 'Board not found');
   }
 
   const titleExists = await client.query<{ exists: boolean }>(
@@ -57,10 +54,7 @@ export const editColumn = async (
   );
 
   if (!boardExists.rows[0].exists) {
-    throw createHttpError(
-      403,
-      'Access denied. This board does not belong to you.',
-    );
+    throw createHttpError(404, 'Board not found');
   }
 
   const titleExists = await client.query<{ exists: boolean }>(
@@ -107,10 +101,7 @@ export const dellColumn = async (
   );
 
   if (!boardExists.rows[0].exists) {
-    throw createHttpError(
-      403,
-      'Access denied. This board does not belong to you.',
-    );
+    throw createHttpError(404, 'Board not found');
   }
 
   const columnExists = await client.query<{ exists: boolean }>(
@@ -119,6 +110,7 @@ export const dellColumn = async (
        ) AS "exists"`,
     [columnId, boardId],
   );
+
   if (!columnExists.rows[0].exists) {
     throw createHttpError(404, 'This column not found');
   }

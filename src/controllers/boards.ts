@@ -7,6 +7,7 @@ import {
 } from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
 import createHttpError from 'http-errors';
+import { withTransaction } from '../utils/withTransactionWrapper';
 
 export const getBoardsController = async (
   req: Request,
@@ -41,12 +42,13 @@ export const createBoardController = async (
   req: Request<{}, {}, CreateBoardBody>,
   res: Response,
 ): Promise<void> => {
-  console.log('test req', req.user);
-  const board = await createBoard(req.body.title, req.user.id);
+  const board = await withTransaction((client) =>
+    createBoard(client, req.body.title, req.user.id),
+  );
 
   res.status(201).json({
     status: 201,
-    message: 'Create board successfully ',
+    message: 'Create board successfully',
     data: board,
   });
 };
@@ -56,7 +58,9 @@ export const editBoardController = async (req: Request, res: Response) => {
 
   if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
 
-  const board = await editBoard(boardId, req.body.title, req.user.id);
+  const board = await withTransaction((client) =>
+    editBoard(client, boardId, req.body.title, req.user.id),
+  );
 
   res.status(200).json({
     status: 200,
@@ -70,11 +74,13 @@ export const deleteBoardController = async (req: Request, res: Response) => {
 
   if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
 
-  const board = await deleteBoard(boardId, req.user.id);
+  const board = await withTransaction((client) =>
+    deleteBoard(client, boardId, req.user.id),
+  );
 
   res.status(200).json({
     status: 200,
-    message: 'Edit board successfully ',
+    message: 'Board deleted successfully',
     data: board,
   });
 };
