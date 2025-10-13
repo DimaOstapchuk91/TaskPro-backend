@@ -82,6 +82,10 @@ export const editColumn = async (
     [newTitle, columnId],
   );
 
+  if (!updated.rows[0]) {
+    throw createHttpError(404, 'Task not found');
+  }
+
   return updated.rows[0];
 };
 

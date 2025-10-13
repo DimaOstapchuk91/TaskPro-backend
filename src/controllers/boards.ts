@@ -30,7 +30,7 @@ export const getBoardsController = async (
   });
 };
 
-export const getOneBoardsController = async (req: Request, res: Response) => {
+export const getOneBoardController = async (req: Request, res: Response) => {
   res.status(200).json({
     status: 200,
     message: 'Successfully get user boards',

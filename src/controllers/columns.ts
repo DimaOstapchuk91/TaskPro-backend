@@ -30,6 +30,7 @@ export const editColumnController = async (
   const columnId = Number(req.params.id);
 
   if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
+  if (isNaN(columnId)) throw createHttpError(400, 'Invalid columnId');
 
   const column = await withTransaction((client) =>
     editColumn(client, req.body.title, boardId, req.user.id, columnId),

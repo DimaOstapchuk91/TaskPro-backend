@@ -19,7 +19,7 @@ export const createBoard = async (
 ) => {
   const titleExists = await client.query<{ exists: boolean }>(
     `SELECT EXISTS (
-         SELECT 1 FROM columns WHERE title = $1 AND owner_id = $2
+         SELECT 1 FROM boards WHERE title = $1 AND owner_id = $2
        ) AS "exists"`,
     [boardTitle, userId],
   );
