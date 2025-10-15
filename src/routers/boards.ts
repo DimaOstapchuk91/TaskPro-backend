@@ -8,7 +8,7 @@ import {
   deleteBoardController,
   editBoardController,
   getBoardsController,
-  getOneBoardsController,
+  getOneBoardController,
 } from '../controllers/boards';
 import { boardSchema } from '../validation/boards';
 import {
@@ -30,7 +30,7 @@ const router = Router();
 
 router.get('/', authenticate, ctrlWrapper(getBoardsController));
 
-router.get('/:boardId', authenticate, ctrlWrapper(getOneBoardsController));
+router.get('/:boardId', authenticate, ctrlWrapper(getOneBoardController));
 
 router.post(
   '/',

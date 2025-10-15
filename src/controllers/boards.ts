@@ -3,6 +3,7 @@ import {
   createBoard,
   deleteBoard,
   editBoard,
+  getOneBoards,
   getUserBoards,
 } from '../services/boards';
 import { CreateBoardBody } from '../types/boards.types';
@@ -31,10 +32,18 @@ export const getBoardsController = async (
 };
 
 export const getOneBoardController = async (req: Request, res: Response) => {
+  const boardId = Number(req.params.boardId);
+
+  if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
+
+  const board = await withTransaction((client) =>
+    getOneBoards(client, boardId, req.user.id),
+  );
+
   res.status(200).json({
     status: 200,
     message: 'Successfully get user boards',
-    data: boards,
+    data: board,
   });
 };
 
