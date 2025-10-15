@@ -2,6 +2,8 @@ import createHttpError from 'http-errors';
 import { Columns } from '../types/columns.types';
 import { PoolClient } from 'pg';
 
+//============================================================= CREATE COLUMN <<<
+
 export const createColumn = async (
   client: PoolClient,
   columnTitle: string,
@@ -37,9 +39,9 @@ export const createColumn = async (
   return columnCreate.rows[0];
 };
 
-//================================================================Edit Column
+//============================================================= UPDATE COLUMN <<<
 
-export const editColumn = async (
+export const updateColumn = async (
   client: PoolClient,
   newTitle: string,
   boardId: number,
@@ -89,9 +91,9 @@ export const editColumn = async (
   return updated.rows[0];
 };
 
-//================================================================Delete Column
+//============================================================= DELETE COLUMN <<<
 
-export const dellColumn = async (
+export const deleteColumn = async (
   client: PoolClient,
   boardId: number,
   userId: number,

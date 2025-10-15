@@ -2,6 +2,8 @@ import { PoolClient } from 'pg';
 import { Task, TaskInput } from '../types/task.stypes';
 import createHttpError from 'http-errors';
 
+// ============================================================== CREATE TASK <<<
+
 export const createTask = async (
   client: PoolClient,
   taskData: TaskInput,
@@ -41,7 +43,9 @@ export const createTask = async (
   return created.rows[0];
 };
 
-export const editTask = async (
+// =========================================================== UPDATE TASK <<<
+
+export const updateTask = async (
   client: PoolClient,
   taskData: TaskInput,
   columnId: number,
@@ -84,6 +88,8 @@ export const editTask = async (
 
   return updated.rows[0];
 };
+
+// ============================================================== DELETE TASK <<<
 
 export const deleteTask = async (
   client: PoolClient,

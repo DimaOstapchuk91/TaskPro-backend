@@ -1,8 +1,15 @@
 import createHttpError from 'http-errors';
 import { pool } from '../db/db';
-import { Board, BoardWithColumnsAndTasks } from '../types/boards.types';
+import {
+  Board,
+  BoardInputCreate,
+  BoardInputUpdate,
+  BoardWithColumnsAndTasks,
+} from '../types/boards.types';
 import { PoolClient } from 'pg';
 import { Task } from '../types/task.stypes';
+
+//============================================================== GET ALL BOARD <<<
 
 export const getUserBoards = async (userId: number): Promise<Board[]> => {
   const getBoards = await pool.query(
@@ -12,6 +19,8 @@ export const getUserBoards = async (userId: number): Promise<Board[]> => {
 
   return getBoards.rows;
 };
+
+//========================================================= GET BOARD FOR ID <<<
 
 export const getOneBoards = async (
   client: PoolClient,
@@ -94,41 +103,45 @@ export const getOneBoards = async (
   };
 };
 
+//============================================================= CREATE BOARD <<<
+
 export const createBoard = async (
   client: PoolClient,
-  boardTitle: string,
+  boardData: BoardInputCreate,
   userId: number,
-) => {
+): Promise<Board> => {
   const titleExists = await client.query<{ exists: boolean }>(
     `SELECT EXISTS (
-         SELECT 1 FROM boards WHERE title = $1 AND owner_id = $2
+         SELECT 1 FROM boards WHERE title = $1 AND  owner_id = $2
        ) AS "exists"`,
-    [boardTitle, userId],
+    [boardData.title, userId],
   );
 
   if (titleExists.rows[0].exists) {
     throw createHttpError(409, 'A board with this name already exists.');
   }
 
-  const boardCreate = await client.query(
-    'INSERT INTO boards (title, owner_id) VALUES ($1, $2)  RETURNING *',
-    [boardTitle, userId],
+  const boardCreate = await client.query<Board>(
+    'INSERT INTO boards (title, owner_id, icon, background) VALUES ($1, $2, $3,$4)  RETURNING *',
+    [boardData.title, userId, boardData.icons, boardData.background],
   );
 
   return boardCreate.rows[0];
 };
 
-export const editBoard = async (
+//============================================================= UPDATE BOARD <<<
+
+export const updateBoard = async (
   client: PoolClient,
   boardId: number,
-  newTitle: string,
+  boardData: BoardInputUpdate,
   userId: number,
 ): Promise<Board> => {
   const titleExists = await client.query<{ exists: boolean }>(
     `SELECT EXISTS (
          SELECT 1 FROM columns WHERE title = $1 AND owner_id = $2 AND id !=$3
        ) AS "exists"`,
-    [newTitle, userId, boardId],
+    [boardData.title, userId, boardId],
   );
 
   if (titleExists.rows[0].exists) {
@@ -136,8 +149,8 @@ export const editBoard = async (
   }
 
   const newBoardTitle = await client.query<Board>(
-    'UPDATE boards SET title = $1 WHERE id = $2 RETURNING *',
-    [newTitle, boardId],
+    'UPDATE boards SET title = $1, icon = $2, background = $3 WHERE id = $4 RETURNING *',
+    [boardData.title, boardData.icons, boardData.background, boardId],
   );
 
   if (!newBoardTitle.rows[0]) {
@@ -146,6 +159,8 @@ export const editBoard = async (
 
   return newBoardTitle.rows[0];
 };
+
+//============================================================= DELETE BOARD <<<
 
 export const deleteBoard = async (
   client: PoolClient,

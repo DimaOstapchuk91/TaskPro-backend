@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createTask, deleteTask, editTask } from '../services/tasks';
+import { createTask, deleteTask, updateTask } from '../services/tasks';
 import { withTransaction } from '../utils/withTransactionWrapper';
 import createHttpError from 'http-errors';
 
@@ -24,7 +24,7 @@ export const createTaskController = async (
   });
 };
 
-export const editTaskController = async (
+export const updateTaskController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -37,7 +37,7 @@ export const editTaskController = async (
   if (isNaN(taskId)) throw createHttpError(400, 'Invalid taskId');
 
   const task = await withTransaction((client) =>
-    editTask(client, req.body, columnId, boardId, req.user.id, taskId),
+    updateTask(client, req.body, columnId, boardId, req.user.id, taskId),
   );
 
   res.status(200).json({

@@ -6,20 +6,20 @@ import { ctrlWrapper } from '../utils/ctrlWrapper';
 import {
   createBoardController,
   deleteBoardController,
-  editBoardController,
   getBoardsController,
   getOneBoardController,
+  updateBoardController,
 } from '../controllers/boards';
 import { boardSchema } from '../validation/boards';
 import {
   createColumnController,
   deleteColumnController,
-  editColumnController,
+  updateColumnController,
 } from '../controllers/columns';
 import {
   createTaskController,
   deleteTaskController,
-  editTaskController,
+  updateTaskController,
 } from '../controllers/tasks';
 
 const jsonParser = express.json();
@@ -45,7 +45,7 @@ router.patch(
   authenticate,
   jsonParser,
   validateBody(boardSchema),
-  ctrlWrapper(editBoardController),
+  ctrlWrapper(updateBoardController),
 );
 
 router.delete('/:boardId', authenticate, ctrlWrapper(deleteBoardController));
@@ -65,7 +65,7 @@ router.patch(
   authenticate,
   jsonParser,
   // validateBody(),
-  ctrlWrapper(editColumnController),
+  ctrlWrapper(updateColumnController),
 );
 
 router.delete(
@@ -89,7 +89,7 @@ router.patch(
   authenticate,
   jsonParser,
   // validateBody(),
-  ctrlWrapper(editTaskController),
+  ctrlWrapper(updateTaskController),
 );
 
 router.delete(

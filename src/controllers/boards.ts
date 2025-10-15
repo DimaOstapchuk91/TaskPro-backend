@@ -2,11 +2,10 @@ import { Request, Response } from 'express';
 import {
   createBoard,
   deleteBoard,
-  editBoard,
   getOneBoards,
   getUserBoards,
+  updateBoard,
 } from '../services/boards';
-import { CreateBoardBody } from '../types/boards.types';
 import createHttpError from 'http-errors';
 import { withTransaction } from '../utils/withTransactionWrapper';
 
@@ -48,11 +47,11 @@ export const getOneBoardController = async (req: Request, res: Response) => {
 };
 
 export const createBoardController = async (
-  req: Request<{}, {}, CreateBoardBody>,
+  req: Request,
   res: Response,
 ): Promise<void> => {
   const board = await withTransaction((client) =>
-    createBoard(client, req.body.title, req.user.id),
+    createBoard(client, req.body, req.user.id),
   );
 
   res.status(201).json({
@@ -62,13 +61,13 @@ export const createBoardController = async (
   });
 };
 
-export const editBoardController = async (req: Request, res: Response) => {
+export const updateBoardController = async (req: Request, res: Response) => {
   const boardId = Number(req.params.boardId);
 
   if (isNaN(boardId)) throw createHttpError(400, 'Invalid boardId');
 
   const board = await withTransaction((client) =>
-    editBoard(client, boardId, req.body.title, req.user.id),
+    updateBoard(client, boardId, req.body, req.user.id),
   );
 
   res.status(200).json({

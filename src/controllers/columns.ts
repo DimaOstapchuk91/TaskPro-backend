@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { createColumn, dellColumn, editColumn } from '../services/columns';
+import { createColumn, deleteColumn, updateColumn } from '../services/columns';
 import createHttpError from 'http-errors';
 import { withTransaction } from '../utils/withTransactionWrapper';
 
@@ -22,7 +22,7 @@ export const createColumnController = async (
   });
 };
 
-export const editColumnController = async (
+export const updateColumnController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
@@ -33,7 +33,7 @@ export const editColumnController = async (
   if (isNaN(columnId)) throw createHttpError(400, 'Invalid columnId');
 
   const column = await withTransaction((client) =>
-    editColumn(client, req.body.title, boardId, req.user.id, columnId),
+    updateColumn(client, req.body.title, boardId, req.user.id, columnId),
   );
 
   res.status(200).json({
@@ -54,7 +54,7 @@ export const deleteColumnController = async (
   if (isNaN(columnId)) throw createHttpError(400, 'Invalid columnId');
 
   const deletedColumn = await withTransaction((client) =>
-    dellColumn(client, boardId, req.user.id, columnId),
+    deleteColumn(client, boardId, req.user.id, columnId),
   );
 
   res.status(200).json({
