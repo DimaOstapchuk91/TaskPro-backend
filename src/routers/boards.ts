@@ -21,6 +21,8 @@ import {
   deleteTaskController,
   updateTaskController,
 } from '../controllers/tasks';
+import { columnSchema } from '../validation/columns';
+import { taskSchema } from '../validation/tasks';
 
 const jsonParser = express.json();
 
@@ -56,7 +58,7 @@ router.post(
   '/:boardId/columns/',
   authenticate,
   jsonParser,
-  // validateBody(),
+  validateBody(columnSchema),
   ctrlWrapper(createColumnController),
 );
 
@@ -64,7 +66,7 @@ router.patch(
   '/:boardId/columns/:id',
   authenticate,
   jsonParser,
-  // validateBody(),
+  validateBody(columnSchema),
   ctrlWrapper(updateColumnController),
 );
 
@@ -80,7 +82,7 @@ router.post(
   '/:boardId/columns/:columnId/tasks/',
   authenticate,
   jsonParser,
-  // validateBody(),
+  validateBody(taskSchema),
   ctrlWrapper(createTaskController),
 );
 
@@ -88,7 +90,7 @@ router.patch(
   '/:boardId/columns/:columnId/task/:id',
   authenticate,
   jsonParser,
-  // validateBody(),
+  validateBody(taskSchema),
   ctrlWrapper(updateTaskController),
 );
 
