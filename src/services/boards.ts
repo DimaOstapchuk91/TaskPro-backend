@@ -139,13 +139,13 @@ export const updateBoard = async (
 ): Promise<Board> => {
   const titleExists = await client.query<{ exists: boolean }>(
     `SELECT EXISTS (
-         SELECT 1 FROM columns WHERE title = $1 AND owner_id = $2 AND id !=$3
+         SELECT 1 FROM boards WHERE title = $1 AND owner_id = $2 AND id !=$3
        ) AS "exists"`,
     [boardData.title, userId, boardId],
   );
 
   if (titleExists.rows[0].exists) {
-    throw createHttpError(409, 'A board with this id already exists.');
+    throw createHttpError(409, 'A board with this title already exists.');
   }
 
   const newBoardTitle = await client.query<Board>(
