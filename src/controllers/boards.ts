@@ -13,6 +13,7 @@ export const getBoardsController = async (
   req: Request,
   res: Response,
 ): Promise<void> => {
+  console.log('Тест запита контроллер');
   const boards = await getUserBoards(req.user.id);
 
   if (!boards.length) {

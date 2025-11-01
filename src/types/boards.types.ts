@@ -1,10 +1,24 @@
 import { Task } from './task.stypes';
 
+interface ImageVariant {
+  filename: string;
+  id: string;
+  url: string;
+}
+
+export interface Background {
+  name: string;
+  mob: ImageVariant;
+  tab: ImageVariant;
+  desk: ImageVariant;
+  thumb: ImageVariant;
+}
+
 export type Board = {
   id: string;
   owner_id: number;
   title: string;
-  icons:
+  icon:
     | 'icon-star'
     | 'icon-container'
     | 'icon-puzzle'
@@ -13,7 +27,7 @@ export type Board = {
     | 'icon-hexagon'
     | 'icon-lightning'
     | 'icon-loading';
-  background: string;
+  background: Background | null;
   created_at: string;
   updated_at: string;
 };

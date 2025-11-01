@@ -121,9 +121,11 @@ export const createBoard = async (
     throw createHttpError(409, 'A board with this name already exists.');
   }
 
+  console.log('Тест запита сервіс');
+
   const boardCreate = await client.query<Board>(
     'INSERT INTO boards (title, owner_id, icon, background) VALUES ($1, $2, $3,$4)  RETURNING *',
-    [boardData.title, userId, boardData.icons, boardData.background],
+    [boardData.title, userId, boardData.icon, boardData.background],
   );
 
   return boardCreate.rows[0];
@@ -150,7 +152,7 @@ export const updateBoard = async (
 
   const newBoardTitle = await client.query<Board>(
     'UPDATE boards SET title = $1, icon = $2, background = $3 WHERE id = $4 RETURNING *',
-    [boardData.title, boardData.icons, boardData.background, boardId],
+    [boardData.title, boardData.icon, boardData.background, boardId],
   );
 
   if (!newBoardTitle.rows[0]) {
