@@ -73,31 +73,27 @@ export const getOneBoards = async (
     throw createHttpError(404, 'Board not found');
   }
 
-  // Створення структури колонок
   const columnsMap = new Map<
     number,
     { id: number; title: string; board_id: number; tasks: Task[] }
   >();
 
   result.rows.forEach((row) => {
-    // Немає колонки (дошка без колонок)
     if (row.column_id === null) return;
 
-    // Якщо колонки ще немає в Map — додаємо
     if (!columnsMap.has(row.column_id)) {
       columnsMap.set(row.column_id, {
         id: row.column_id,
         title: row.column_title!,
-        board_id: row.column_board_id!, // ← ДОДАНО
+        board_id: row.column_board_id!,
         tasks: [],
       });
     }
 
-    // Є таска — додаємо в масив
     if (row.task_id !== null) {
       columnsMap.get(row.column_id)!.tasks.push({
         id: row.task_id,
-        column_id: row.task_column_id!, // ← ДОДАНО
+        column_id: row.task_column_id!,
         title: row.task_title!,
         description: row.task_description!,
         priority: row.task_priority!,
