@@ -32,6 +32,7 @@ export const getOneBoards = async (
     board_title: string;
     column_id: number | null;
     column_title: string | null;
+    column_board_id: number | null;
     task_id: number | null;
     task_title: string | null;
     task_description: string | null;
@@ -39,25 +40,31 @@ export const getOneBoards = async (
     task_deadline: string | null;
     task_created_at: string | null;
     task_updated_at: string | null;
+    task_column_id: number | null;
   }>(
     `
       SELECT
         b.id AS board_id,
         b.title AS board_title,
+
         c.id AS column_id,
         c.title AS column_title,
+        c.board_id AS column_board_id,
+
         t.id AS task_id,
         t.title AS task_title,
         t.description AS task_description,
         t.priority AS task_priority,
         t.deadline AS task_deadline,
         t.created_at AS task_created_at,
-        t.updated_at AS task_updated_at
+        t.updated_at AS task_updated_at,
+        t.column_id AS task_column_id
+
       FROM boards b
       LEFT JOIN columns c ON c.board_id = b.id
       LEFT JOIN tasks t ON t.column_id = c.id
       WHERE b.id = $1 AND b.owner_id = $2
-      ORDER BY c.id, t.id
+      ORDER BY c.id, t.id;
     `,
     [boardId, userId],
   );
@@ -66,26 +73,31 @@ export const getOneBoards = async (
     throw createHttpError(404, 'Board not found');
   }
 
+  // Створення структури колонок
   const columnsMap = new Map<
     number,
-    { id: number; title: string; tasks: Task[] }
+    { id: number; title: string; board_id: number; tasks: Task[] }
   >();
 
   result.rows.forEach((row) => {
+    // Немає колонки (дошка без колонок)
     if (row.column_id === null) return;
 
+    // Якщо колонки ще немає в Map — додаємо
     if (!columnsMap.has(row.column_id)) {
       columnsMap.set(row.column_id, {
         id: row.column_id,
         title: row.column_title!,
+        board_id: row.column_board_id!, // ← ДОДАНО
         tasks: [],
       });
     }
 
+    // Є таска — додаємо в масив
     if (row.task_id !== null) {
       columnsMap.get(row.column_id)!.tasks.push({
         id: row.task_id,
-        column_id: row.column_id,
+        column_id: row.task_column_id!, // ← ДОДАНО
         title: row.task_title!,
         description: row.task_description!,
         priority: row.task_priority!,
