@@ -1,7 +1,14 @@
 import { Request, Response } from 'express';
-import { createTask, deleteTask, updateTask } from '../services/tasks';
+import {
+  createTask,
+  deleteTask,
+  moveTaskService,
+  updateTask,
+} from '../services/tasks';
 import { withTransaction } from '../utils/withTransactionWrapper';
 import createHttpError from 'http-errors';
+
+// ========================================================== CREATE TASK >>>
 
 export const createTaskController = async (
   req: Request,
@@ -23,6 +30,8 @@ export const createTaskController = async (
     data: task,
   });
 };
+
+// ========================================================== UPDATE TASK >>>
 
 export const updateTaskController = async (
   req: Request,
@@ -46,6 +55,33 @@ export const updateTaskController = async (
     data: task,
   });
 };
+
+// ============================================================ MOVE TASK >>>
+
+export const moveTaskController = async (req: Request, res: Response) => {
+  const taskId = Number(req.params.id);
+  const sourceColumnId = Number(req.params.columnId);
+  const { destinationColumnId, oldPosition, newPosition } = req.body;
+
+  if (isNaN(taskId)) throw createHttpError(400, 'Invalid taskId');
+
+  const result = await withTransaction((client) =>
+    moveTaskService(client, taskId, {
+      sourceColumnId,
+      destinationColumnId,
+      oldPosition,
+      newPosition,
+    }),
+  );
+
+  res.status(200).json({
+    status: 200,
+    message: 'Task moved successfully',
+    data: result,
+  });
+};
+
+// ============================================================ DELETE TASK <<<
 
 export const deleteTaskController = async (
   req: Request,

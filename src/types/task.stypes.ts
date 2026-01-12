@@ -5,6 +5,7 @@ export interface Task {
   description: string;
   priority: 'High' | 'Medium' | 'Low' | 'Without';
   deadline: string;
+  position: number;
   created_at: string;
   updated_at: string;
 }

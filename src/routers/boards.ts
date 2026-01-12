@@ -19,6 +19,7 @@ import {
 import {
   createTaskController,
   deleteTaskController,
+  moveTaskController,
   updateTaskController,
 } from '../controllers/tasks';
 import { columnSchema } from '../validation/columns';
@@ -92,6 +93,14 @@ router.patch(
   jsonParser,
   validateBody(taskSchema),
   ctrlWrapper(updateTaskController),
+);
+
+router.patch(
+  '/:boardId/columns/:columnId/tasks/:id/move',
+  authenticate,
+  jsonParser,
+  // validateBody(taskSchema)
+  ctrlWrapper(moveTaskController),
 );
 
 router.delete(
