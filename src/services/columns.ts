@@ -91,6 +91,37 @@ export const updateColumn = async (
   return updated.rows[0];
 };
 
+// ============================================================ MOVE COLUMN <<<
+
+export const moveColumnService = async (
+  client: PoolClient,
+  boardId: number,
+  columnId: number,
+  oldPosition: number,
+  newPosition: number,
+) => {
+  if (newPosition < oldPosition) {
+    await client.query(
+      `UPDATE columns SET position = position + 1
+       WHERE board_id = $1 AND position >= $2 AND position < $3`,
+      [boardId, newPosition, oldPosition],
+    );
+  } else if (newPosition > oldPosition) {
+    await client.query(
+      `UPDATE columns SET position = position - 1
+       WHERE board_id = $1 AND position > $2 AND position <= $3`,
+      [boardId, oldPosition, newPosition],
+    );
+  }
+
+  const result = await client.query(
+    `UPDATE columns SET position = $1 WHERE id = $2 RETURNING *`,
+    [newPosition, columnId],
+  );
+
+  return result.rows[0];
+};
+
 //============================================================= DELETE COLUMN <<<
 
 export const deleteColumn = async (
@@ -121,6 +152,12 @@ export const deleteColumn = async (
     throw createHttpError(404, 'This column not found');
   }
 
+  const colRes = await client.query(
+    'SELECT position FROM columns WHERE id = $1',
+    [columnId],
+  );
+  const deletedPos = colRes.rows[0].position;
+
   const deleted = await client.query<{ id: number }>(
     'DELETE FROM columns WHERE id = $1 RETURNING id',
     [columnId],
@@ -129,6 +166,12 @@ export const deleteColumn = async (
   if (deleted.rowCount === 0) {
     throw createHttpError(404, 'Column not found');
   }
+
+  await client.query(
+    `UPDATE columns SET position = position - 1
+   WHERE board_id = $1 AND position > $2`,
+    [boardId, deletedPos],
+  );
 
   return deleted.rows[0];
 };

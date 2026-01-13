@@ -14,6 +14,7 @@ import { boardSchema } from '../validation/boards';
 import {
   createColumnController,
   deleteColumnController,
+  moveColumnController,
   updateColumnController,
 } from '../controllers/columns';
 import {
@@ -69,6 +70,14 @@ router.patch(
   jsonParser,
   validateBody(columnSchema),
   ctrlWrapper(updateColumnController),
+);
+
+router.patch(
+  '/:boardId/columns/:columnId/move',
+  authenticate,
+  jsonParser,
+  // validateBody(columnSchema)
+  ctrlWrapper(moveColumnController),
 );
 
 router.delete(

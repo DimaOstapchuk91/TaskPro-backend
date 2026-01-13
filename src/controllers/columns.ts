@@ -1,5 +1,10 @@
 import { Request, Response } from 'express';
-import { createColumn, deleteColumn, updateColumn } from '../services/columns';
+import {
+  createColumn,
+  deleteColumn,
+  moveColumnService,
+  updateColumn,
+} from '../services/columns';
 import createHttpError from 'http-errors';
 import { withTransaction } from '../utils/withTransactionWrapper';
 
@@ -40,6 +45,27 @@ export const updateColumnController = async (
     status: 200,
     message: 'Edit column successfully ',
     data: column,
+  });
+};
+
+export const moveColumnController = async (req: Request, res: Response) => {
+  const boardId = Number(req.params.boardId);
+  const columnId = Number(req.params.columnId);
+
+  const { oldPosition, newPosition } = req.body;
+
+  if (isNaN(boardId) || isNaN(columnId)) {
+    throw createHttpError(400, 'Invalid boardId or columnId');
+  }
+
+  const updatedColumn = await withTransaction((client) =>
+    moveColumnService(client, boardId, columnId, oldPosition, newPosition),
+  );
+
+  res.status(200).json({
+    status: 200,
+    message: 'Column moved successfully',
+    data: updatedColumn,
   });
 };
 

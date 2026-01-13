@@ -7,7 +7,7 @@ import {
   BoardWithColumnsAndTasks,
 } from '../types/boards.types';
 import { PoolClient } from 'pg';
-import { Task } from '../types/task.stypes';
+import { Task } from '../types/tasks.types';
 
 //============================================================== GET ALL BOARD <<<
 
@@ -140,13 +140,13 @@ export const getOneBoards = async (
                   t.updated_at
                 FROM tasks t
                 WHERE t.column_id = c.id
-                ORDER BY t.id -- Тут пізніше додамо ORDER BY t.position
+                ORDER BY t.position
               ) task_data),
               '[]'::json
             ) AS tasks
           FROM columns c
           WHERE c.board_id = b.id
-          ORDER BY c.id -- Тут пізніше додамо ORDER BY c.position
+          ORDER BY c.position
         ) col_data),
         '[]'::json
       ) AS columns

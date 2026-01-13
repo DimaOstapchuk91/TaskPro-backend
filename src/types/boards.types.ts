@@ -1,4 +1,4 @@
-import { Task } from './task.stypes';
+import { Task } from './tasks.types';
 
 interface ImageVariant {
   filename: string;

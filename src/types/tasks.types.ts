@@ -14,3 +14,10 @@ export type TaskInput = Omit<
   Task,
   'updated_at' | 'created_at' | 'id' | 'column_id'
 >;
+
+export interface MoveTaskData {
+  sourceColumnId: number;
+  destinationColumnId: number;
+  oldPosition: number;
+  newPosition: number;
+}

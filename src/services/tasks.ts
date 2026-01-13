@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import { Task, TaskInput } from '../types/task.stypes';
+import { MoveTaskData, Task, TaskInput } from '../types/tasks.types';
 import createHttpError from 'http-errors';
 
 // ============================================================== CREATE TASK <<<
@@ -90,13 +90,6 @@ export const updateTask = async (
 };
 
 // ============================================================== MOVE TASK <<<
-
-interface MoveTaskData {
-  sourceColumnId: number;
-  destinationColumnId: number;
-  oldPosition: number;
-  newPosition: number;
-}
 
 export const moveTaskService = async (
   client: PoolClient,
