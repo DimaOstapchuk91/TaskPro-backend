@@ -97,7 +97,7 @@ router.post(
 );
 
 router.patch(
-  '/:boardId/columns/:columnId/task/:id',
+  '/:boardId/columns/:columnId/tasks/:id',
   authenticate,
   jsonParser,
   validateBody(taskSchema),
@@ -113,7 +113,7 @@ router.patch(
 );
 
 router.delete(
-  '/:boardId/columns/:columnId/task/:id',
+  '/:boardId/columns/:columnId/tasks/:id',
   authenticate,
   ctrlWrapper(deleteTaskController),
 );
