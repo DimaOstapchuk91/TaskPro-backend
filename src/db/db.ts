@@ -8,6 +8,7 @@ export const pool = new Pool({
   database: env('PG_DATABASE'),
   password: env('PG_PASSWORD'),
   port: Number(env('PG_PORT')),
+  ssl: env('PG_SSL') === 'true' ? { rejectUnauthorized: false } : false,
 });
 
 export const checkDbConnection = async () => {
