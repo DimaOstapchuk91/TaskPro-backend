@@ -1,7 +1,6 @@
 import { Pool } from 'pg';
 import { env } from '../utils/env';
 
-// Створюємо пул з'єднань
 export const pool = new Pool({
   user: env('PG_USER'),
   host: env('PG_HOST'),
