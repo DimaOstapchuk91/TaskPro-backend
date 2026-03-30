@@ -1,13 +1,13 @@
 import createHttpError from 'http-errors';
-import { pool } from '../db/db';
+import { pool } from '../db/db.js';
 import {
   Board,
   BoardInputCreate,
   BoardInputUpdate,
   BoardWithColumnsAndTasks,
-} from '../types/boards.types';
+} from '../types/boards.types.js';
 import { PoolClient } from 'pg';
-import { Task } from '../types/tasks.types';
+// import { Task } from '../types/tasks.types.js';
 
 //============================================================== GET ALL BOARD <<<
 

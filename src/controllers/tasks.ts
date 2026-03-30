@@ -4,8 +4,8 @@ import {
   deleteTask,
   moveTaskService,
   updateTask,
-} from '../services/tasks';
-import { withTransaction } from '../utils/withTransactionWrapper';
+} from '../services/tasks.js';
+import { withTransaction } from '../utils/withTransactionWrapper.js';
 import createHttpError from 'http-errors';
 
 // ========================================================== CREATE TASK >>>

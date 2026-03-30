@@ -6,7 +6,7 @@ import { errorHandler } from './middlewares/errorHandler.js';
 import cors from 'cors';
 import pino from 'pino-http';
 import cookieParser from 'cookie-parser';
-import allRouters from './routers/index';
+import allRouters from './routers/index.js';
 
 const PORT = Number(env('PORT', '3000'));
 

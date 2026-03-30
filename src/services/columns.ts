@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { Columns } from '../types/columns.types';
+import { Columns } from '../types/columns.types.js';
 import { PoolClient } from 'pg';
 
 //============================================================= CREATE COLUMN <<<

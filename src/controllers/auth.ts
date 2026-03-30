@@ -5,14 +5,14 @@ import {
   logoutUser,
   refreshUserSession,
   registerUser,
-} from '../services/auth';
-import { THIRTY_DAY } from '../constans/constans';
+} from '../services/auth.js';
+import { THIRTY_DAY } from '../constans/constans.js';
 import {
   LoginPayload,
   RefreshCookies,
   RegisterPayload,
   ResponseLoginSession,
-} from '../types/auth.types';
+} from '../types/auth.types.js';
 import createHttpError from 'http-errors';
 
 export const registerUserController = async (

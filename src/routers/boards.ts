@@ -1,30 +1,30 @@
 import { Router } from 'express';
 import express from 'express';
-import { authenticate } from '../middlewares/authenticate';
-import { validateBody } from '../middlewares/validateBody';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
+import { authenticate } from '../middlewares/authenticate.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
 import {
   createBoardController,
   deleteBoardController,
   getBoardsController,
   getOneBoardController,
   updateBoardController,
-} from '../controllers/boards';
-import { boardSchema } from '../validation/boards';
+} from '../controllers/boards.js';
+import { boardSchema } from '../validation/boards.js';
 import {
   createColumnController,
   deleteColumnController,
   moveColumnController,
   updateColumnController,
-} from '../controllers/columns';
+} from '../controllers/columns.js';
 import {
   createTaskController,
   deleteTaskController,
   moveTaskController,
   updateTaskController,
-} from '../controllers/tasks';
-import { columnSchema } from '../validation/columns';
-import { taskSchema } from '../validation/tasks';
+} from '../controllers/tasks.js';
+import { columnSchema } from '../validation/columns.js';
+import { taskSchema } from '../validation/tasks.js';
 
 const jsonParser = express.json();
 

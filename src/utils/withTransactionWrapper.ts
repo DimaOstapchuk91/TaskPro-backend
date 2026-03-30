@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import { pool } from '../db/db';
+import { pool } from '../db/db.js';
 
 export async function withTransaction<T>(
   callback: (client: PoolClient) => Promise<T>,

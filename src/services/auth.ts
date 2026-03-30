@@ -1,8 +1,8 @@
 import createHttpError from 'http-errors';
-import { pool } from '../db/db';
+import { pool } from '../db/db.js';
 import bcrypt from 'bcrypt';
 import { randomBytes } from 'crypto';
-import { THIRTY_DAY, TWO_HOURS } from '../constans/constans';
+import { THIRTY_DAY, TWO_HOURS } from '../constans/constans.js';
 import {
   AllSessionData,
   AllUserData,
@@ -12,7 +12,7 @@ import {
   ResponseLoginSession,
   ResponseUser,
   SessionPart,
-} from '../types/auth.types';
+} from '../types/auth.types.js';
 
 // ==========================Register User======================================
 

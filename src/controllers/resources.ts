@@ -1,5 +1,5 @@
 import { Request, Response } from 'express';
-import { getBackgrounds } from '../utils/uploadToCloudinary ';
+import { getBackgrounds } from '../utils/uploadToCloudinary.js';
 
 export const getBackgroundsController = async (
   req: Request,

@@ -4,9 +4,9 @@ import {
   deleteColumn,
   moveColumnService,
   updateColumn,
-} from '../services/columns';
+} from '../services/columns.js';
 import createHttpError from 'http-errors';
-import { withTransaction } from '../utils/withTransactionWrapper';
+import { withTransaction } from '../utils/withTransactionWrapper.js';
 
 export const createColumnController = async (
   req: Request,

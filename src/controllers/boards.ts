@@ -5,9 +5,9 @@ import {
   getOneBoards,
   getUserBoards,
   updateBoard,
-} from '../services/boards';
+} from '../services/boards.js';
 import createHttpError from 'http-errors';
-import { withTransaction } from '../utils/withTransactionWrapper';
+import { withTransaction } from '../utils/withTransactionWrapper.js';
 
 export const getBoardsController = async (
   req: Request,

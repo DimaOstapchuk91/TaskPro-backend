@@ -1,16 +1,16 @@
 import { Router } from 'express';
 import express from 'express';
-import { ctrlWrapper } from '../utils/ctrlWrapper';
-import { validateBody } from '../middlewares/validateBody';
-import { loginSchema, registerSchema } from '../validation/auth';
+import { ctrlWrapper } from '../utils/ctrlWrapper.js';
+import { validateBody } from '../middlewares/validateBody.js';
+import { loginSchema, registerSchema } from '../validation/auth.js';
 import {
   getUserController,
   loginUserController,
   logoutUserController,
   refreshUserSessionController,
   registerUserController,
-} from '../controllers/auth';
-import { authenticate } from '../middlewares/authenticate';
+} from '../controllers/auth.js';
+import { authenticate } from '../middlewares/authenticate.js';
 
 const jsonParser = express.json();
 

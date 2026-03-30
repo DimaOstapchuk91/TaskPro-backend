@@ -1,5 +1,5 @@
 import createHttpError from 'http-errors';
-import { pool } from '../db/db';
+import { pool } from '../db/db.js';
 import { Request, Response, NextFunction } from 'express';
 
 export const authenticate = async (

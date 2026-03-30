@@ -1,5 +1,5 @@
 import { PoolClient } from 'pg';
-import { MoveTaskData, Task, TaskInput } from '../types/tasks.types';
+import { MoveTaskData, Task, TaskInput } from '../types/tasks.types.js';
 import createHttpError from 'http-errors';
 
 // ============================================================== CREATE TASK <<<
