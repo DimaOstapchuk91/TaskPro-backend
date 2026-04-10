@@ -5,6 +5,7 @@ import {
   logoutUser,
   refreshUserSession,
   registerUser,
+  updateUser,
 } from '../services/auth.js';
 import { THIRTY_DAY } from '../constans/constans.js';
 import {
@@ -14,6 +15,7 @@ import {
   ResponseLoginSession,
 } from '../types/auth.types.js';
 import createHttpError from 'http-errors';
+import { uploadToCloudinary } from '../utils/uploadToCloudinary.js';
 
 export const registerUserController = async (
   req: Request<{}, {}, RegisterPayload>,
@@ -137,5 +139,30 @@ export const getUserController = async (
     status: 200,
     message: 'User found successfully!',
     data: userData,
+  });
+};
+
+export const updateUserController = async (
+  req: Request,
+  res: Response,
+): Promise<void> => {
+  if (!req.user) {
+    throw createHttpError(401, 'Unauthorized');
+  }
+
+  const updateData = { ...req.body };
+
+  if (req.file) {
+    const avatarUrl = await uploadToCloudinary(req.file.path);
+
+    updateData.avatar_url = avatarUrl;
+  }
+
+  const updatedUser = await updateUser(req.user.id, updateData);
+
+  res.status(200).json({
+    status: 200,
+    message: 'User updated successfully!',
+    data: updatedUser,
   });
 };

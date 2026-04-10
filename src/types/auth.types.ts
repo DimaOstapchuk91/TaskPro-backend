@@ -35,8 +35,9 @@ export interface RefreshCookies {
 }
 
 export interface AllUserData {
-  id: string;
+  id: number;
   name: string;
+  password: string;
   email: string;
   avatar_url: string | null;
   theme: 'light' | 'dark' | 'violet';

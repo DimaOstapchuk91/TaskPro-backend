@@ -162,3 +162,49 @@ export const getUser = async (userId: number) => {
 
   return userData.rows[0];
 };
+
+// =========================Edit User====================================
+
+export const updateUser = async (
+  userId: number,
+  userData: Partial<AllUserData>,
+) => {
+  const keys = Object.keys(userData).filter(
+    (key) => userData[key as keyof AllUserData] !== undefined,
+  );
+
+  if (keys.length === 0) {
+    throw createHttpError(400, 'No data to update');
+  }
+
+  if (userData.password) {
+    userData.password = await bcrypt.hash(userData.password, 10);
+  }
+
+  const setClause = keys
+    .map((key, index) => `${key} = $${index + 1}`)
+    .join(', ');
+
+  const values: (string | number | null)[] = keys.map(
+    (key) => userData[key as keyof AllUserData] as string | number | null,
+  );
+
+  values.push(userId);
+
+  const userIdx = values.length;
+
+  const query = `
+    UPDATE users
+    SET ${setClause}
+    WHERE id = $${userIdx}
+    RETURNING id, name, email, avatar_url, theme;
+  `;
+
+  const result = await pool.query<AllUserData>(query, values);
+
+  if (result.rowCount === 0) {
+    throw createHttpError(404, 'User not found');
+  }
+
+  return result.rows[0];
+};
